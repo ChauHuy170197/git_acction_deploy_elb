@@ -4,7 +4,7 @@ module "key_pair" {
   public_key = var.public_key
 
   tags = {
-    Name = "Test-bastion"
+    Name = "bastion"
   }
 }
 
