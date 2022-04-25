@@ -29,7 +29,7 @@ module "public_subnet_02" {
   source                  = "../module/vpc/subnets"
   vpc_id                  = module.vpc.vpc_id
   cidr_block              = "10.10.16.0/24"
-  availability_zone       = "ap-northeast-1b"
+  availability_zone       = "ap-northeast-1c"
   map_public_ip_on_launch = true
 
   tags = {
@@ -54,7 +54,7 @@ module "private_subnet_02" {
   source            = "../module/vpc/subnets"
   vpc_id            = module.vpc.vpc_id
   cidr_block        = "10.10.48.0/24"
-  availability_zone = "ap-northeast-1b"
+  availability_zone = "ap-northeast-1c"
 
   tags = {
     Name = "Test-private-subnet-02"
