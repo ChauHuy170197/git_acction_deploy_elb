@@ -1,6 +1,6 @@
 module "key_pair" {
   source     = "../module/key_pair"
-  key_name   = "Test-bastion"
+  key_name   = "bastion"
   public_key = var.public_key
 
   tags = {
