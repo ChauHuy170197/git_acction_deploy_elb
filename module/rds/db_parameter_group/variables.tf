@@ -1,7 +1,6 @@
 variable "name" {
   description = "The name of the DB parameter group. If omitted, Terraform will assign a random, unique name."
   type        = string
-  default     = null
 }
 variable "family" {
   description = "(Required, Forces new resource) The family of the DB parameter group."

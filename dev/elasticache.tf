@@ -7,7 +7,7 @@ module "elastic_subnet_group" {
 # Create redis instance
 module "redis" {
   source          = "../module/elasticache"
-  cluster_id      = "Test-redis"
+  cluster_id      = "test-redis"
   engine          = "redis"
   node_type       = "cache.t2.micro"
   num_cache_nodes = 1
