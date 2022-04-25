@@ -1,7 +1,3 @@
-data "aws_acm_certificate" "issued" {
-  domain   = "*.Test.io"
-  statuses = ["ISSUED"]
-}
 
 module "elastic_beanstalk_application" {
   source      = "../module/elastic_beanstalk/application"
@@ -31,7 +27,6 @@ module "elastic_beanstalk_environment" {
   healthcheck_url              = "/health-check"
   loadbalancer_subnets         = [module.public_subnet_01.id, module.public_subnet_02.id]
   associate_public_ip_address  = false
-  loadbalancer_certificate_arn = data.aws_acm_certificate.issued.arn
   loadbalancer_ssl_policy      = "ELBSecurityPolicy-2016-08"
 
   loadbalancer_security_groups = [module.security_group_eb_sg.security_group_id]

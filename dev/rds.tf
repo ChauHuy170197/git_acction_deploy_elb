@@ -1,7 +1,7 @@
 # Create parameter group
 module "parameter_group" {
   source          = "../module/rds/db_parameter_group"
-  name            = "Test-mysql"
+  name            = "test-mysql"
   description     = "Custom parameter group of mysql 8 - Test environment"
   family          = "mysql8.0"
   log_output      = "FILE"
@@ -13,7 +13,7 @@ module "parameter_group" {
 # Create db subnet group
 module "db_subnet_group" {
   source     = "../module/rds/db_subnet_group"
-  name       = "Test_subnet_group"
+  name       = "test-subnet-group"
   subnet_ids = [module.private_subnet_01.id, module.private_subnet_02.id]
 }
 
@@ -21,7 +21,7 @@ module "db_subnet_group" {
 module "rds" {
   source = "../module/rds"
 
-  identifier           = "Test-rds"
+  identifier           = "test-rds"
   allocated_storage    = 20
   db_subnet_group_name = module.db_subnet_group.id
   engine               = "mysql"
