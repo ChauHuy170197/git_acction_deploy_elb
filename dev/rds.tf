@@ -26,7 +26,7 @@ module "rds" {
   db_subnet_group_name = module.db_subnet_group.id
   engine               = "mysql"
   engine_version       = "8.0"
-  instance_class       = "t2.micro"
+  instance_class       = "db.t3.micro"
   storage_type         = "gp2"
   publicly_accessible  = false
   parameter_group_name = module.parameter_group.name
