@@ -16,9 +16,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0.1.0
-          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Python version
         uses: actions/setup-python@v1
@@ -36,7 +33,7 @@ jobs:
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: zip release.zip . -r
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
@@ -45,18 +42,19 @@ jobs:
           path: |
             release.zip
             !venv/
-      - name: Get next version
-        id: get_next_version
-        uses: thenativeweb/get-next-version@main
-        with:
-          prefix: 'v' # optional, defaults to ''
-      - name: Create new version
-        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+      - name: Increase version
         run: |
-           NEXT_VERSION=${{ steps.get_next_version.outputs.version }}
-
-           git tag $NEXT_VERSION
-           git push origin $NEXT_VERSION
+            version=$(git describe --tags --abbrev=0)
+            version=${version:-'v0.0.0'}
+            version=${version#"v"}
+            IFS='.' read -r major minor patch <<< "$version"
+            patch=$((patch + 1))
+            new_version="v$major.$minor.$patch"
+            echo "::set-env name=NEW_VERSION::$new_version"
+      - name: Create new version
+        run: |
+           git tag $new_version
+           git push --tags
 
   deploy:
     runs-on: ubuntu-latest

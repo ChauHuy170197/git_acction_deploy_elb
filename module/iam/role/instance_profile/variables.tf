@@ -1,2 +1,0 @@
-variable "role" {}
-variable "name" {}
