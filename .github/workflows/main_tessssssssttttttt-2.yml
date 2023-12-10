@@ -43,18 +43,15 @@ jobs:
             release.zip
             !venv/
       - name: Increase version
+        id: increase-version
         run: |
-            version=$(git describe --tags --abbrev=0)
-            version=${version:-'v0.0.0'}
-            version=${version#"v"}
-            IFS='.' read -r major minor patch <<< "$version"
-            patch=$((patch + 1))
-            new_version="v$major.$minor.$patch"
-            echo "::set-env name=NEW_VERSION::$new_version"
-      - name: Create new version
-        run: |
-           git tag $new_version
-           git push --tags
+           version=$(git describe --tags --abbrev=0)
+           version=${version:-'v0.0.0'}
+           version=${version#"v"}
+           IFS='.' read -r major minor patch <<< "$version"
+           patch=$((patch + 1))
+           new_version="v$major.$minor.$patch"
+           echo "::set-output name=new_version::$new_version"
 
   deploy:
     runs-on: ubuntu-latest
@@ -80,3 +77,8 @@ jobs:
           app-name: 'tessssssssttttttt-2'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4FD78C0747ED40DEA419DF7121E3A003 }}
+
+      - name: Create new version
+        run: |
+           git tag ${{ needs.build.outputs.new_version }}
+           git push --tags
