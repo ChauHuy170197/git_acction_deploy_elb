@@ -62,6 +62,10 @@ jobs:
 
       - name: Next Release Number
         run: echo ${{ steps.versioning.outputs.version }}
+      - name: Create new version
+        run: |
+           git tag v${{ steps.versioning.outputs.version }}
+           git push --tags
 
   deploy:
     runs-on: ubuntu-latest
