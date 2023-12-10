@@ -50,17 +50,13 @@ jobs:
         uses: thenativeweb/get-next-version@main
         with:
           prefix: 'v' # optional, defaults to ''
-      - name: Release
-        if: inputs.version != ${{ steps.get_next_version.outputs.hasNextVersion }}
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ inputs.version }}
-          generate_release_notes: true
-          draft: false
-          prerelease: false
+      - name: Create new version
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        run: |
+           NEXT_VERSION=${{ steps.get_next_version.outputs.version }}
 
+           git tag $NEXT_VERSION
+           git push origin $NEXT_VERSION
 
   deploy:
     runs-on: ubuntu-latest
