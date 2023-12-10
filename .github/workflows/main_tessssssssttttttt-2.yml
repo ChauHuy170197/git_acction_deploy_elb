@@ -16,6 +16,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0.1.0
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Python version
         uses: actions/setup-python@v1
@@ -42,6 +45,22 @@ jobs:
           path: |
             release.zip
             !venv/
+      - name: Get next version
+        id: get_next_version
+        uses: thenativeweb/get-next-version@main
+        with:
+          prefix: 'v' # optional, defaults to ''
+      - name: Release
+        if: inputs.version != ${{ steps.get_next_version.outputs.hasNextVersion }}
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ inputs.version }}
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+
 
   deploy:
     runs-on: ubuntu-latest
