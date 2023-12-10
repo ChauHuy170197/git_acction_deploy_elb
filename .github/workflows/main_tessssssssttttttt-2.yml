@@ -60,12 +60,17 @@ jobs:
           incrementPerCommit: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Next Release Number
-        run: echo ${{ steps.versioning.outputs.version }}
       - name: Create new version
         run: |
            git tag v${{ steps.versioning.outputs.version }}
            git push --tags
+
+      - name: Next Release Number
+        uses: avakar/tag-and-release@v1
+        with:
+          tag_name: v${{ steps.versioning.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
     runs-on: ubuntu-latest
