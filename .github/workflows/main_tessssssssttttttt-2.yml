@@ -56,7 +56,7 @@ jobs:
         uses: MCKanpolat/auto-semver-action@v1
         id: versioning
         with:
-          releaseType: major 
+          releaseType: minor 
           incrementPerCommit: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
