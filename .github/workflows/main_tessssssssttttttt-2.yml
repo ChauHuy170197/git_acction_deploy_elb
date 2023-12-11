@@ -2,20 +2,33 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python app to Azure Web App - tessssssssttttttt-2
+name: PROD - Build and deploy Python app to Azure Web App
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: "Specify release/tag. Skip this when deploy 'main_backup'. Format: x.y.z"
+        required: false
 
 jobs:
   build:
+    name: Production Build
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+      - name: Release
+        if: inputs.version != null
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ inputs.version }}
+          generate_release_notes: true
+          draft: false
+          prerelease: false
 
       - name: Set up Python version
         uses: actions/setup-python@v1
@@ -28,7 +41,9 @@ jobs:
           source venv/bin/activate
       
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          sudo apt-get install -y gcc g++
+          sudo pip install -r requirements.txt
         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
@@ -42,35 +57,11 @@ jobs:
           path: |
             release.zip
             !venv/
-      # - name: Increase version
-      #   id: increase-version
-      #   run: |
-      #      version=$(git describe --tags --abbrev=0)
-      #      version=${version:-'v0.0.0'}
-      #      version=${version#"v"}
-      #      IFS='.' read -r major minor patch <<< "$version"
-      #      patch=$((patch + 1))
-      #      new_version="v$major.$minor.$patch"
-      #      echo "::set-output name=new_version::$new_version"
-      - name: Auto Increment Semver Action
-        uses: MCKanpolat/auto-semver-action@v1
-        id: versioning
-        with:
-          releaseType: major 
-          incrementPerCommit: false
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create new version
+            
+      - name: Get version
+        id: get_version
         run: |
-           git tag v${{ steps.versioning.outputs.version }}
-           git push --tags
-
-      - name: Next Release Number
-        uses: avakar/tag-and-release@v1
-        with:
-          tag_name: v${{ steps.versioning.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "::set-output name=VERSION::$(git rev-parse --short HEAD)"
 
   deploy:
     runs-on: ubuntu-latest
