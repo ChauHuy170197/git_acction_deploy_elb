@@ -25,7 +25,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ inputs.version }}
+          tag_name: ${{ inputs.version }}
           generate_release_notes: true
           draft: false
           prerelease: false
