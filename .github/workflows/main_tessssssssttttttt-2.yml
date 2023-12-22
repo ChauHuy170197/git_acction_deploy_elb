@@ -6,10 +6,12 @@ name: PROD - Build and deploy Python app to Azure Web App
 
 on:
   workflow_dispatch:
+    branch:
+      - main
     inputs:
       version:
         type: string
-        description: "Specify release/tag. Skip this when deploy 'main_backup'. Format: x.y.z"
+        description: "Specify release/tag. Format: x.y.z"
         required: false
 
 jobs:
