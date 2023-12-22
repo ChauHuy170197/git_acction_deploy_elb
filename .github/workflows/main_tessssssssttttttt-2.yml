@@ -5,9 +5,9 @@
 name: PROD - Build and deploy Python app to Azure Web App
 
 on:
+  watch:
+    - main
   workflow_dispatch:
-    branch:
-      - main
     inputs:
       version:
         type: string
