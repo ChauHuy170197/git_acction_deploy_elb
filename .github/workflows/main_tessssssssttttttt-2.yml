@@ -5,14 +5,10 @@
 name: PROD - Build and deploy Python app to Azure Web App
 
 on:
-  watch:
-    - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
-    inputs:
-      version:
-        type: string
-        description: "Specify release/tag. Format: x.y.z"
-        required: false
 
 jobs:
   build:
@@ -21,13 +17,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Auto Increment Semver Action
+        uses: MCKanpolat/auto-semver-action@v1
+        id: versioning
+        with:
+          releaseType: major 
+          incrementPerCommit: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Release
-        if: inputs.version != null
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ inputs.version }}
+          tag_name: v${{ steps.versioning.outputs.version }}
           generate_release_notes: true
           draft: false
           prerelease: false
