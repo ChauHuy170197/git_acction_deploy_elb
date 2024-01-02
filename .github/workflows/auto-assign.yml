@@ -1,6 +1,5 @@
 name: Auto Assign
-on:
-  pull_request:
+on: pull_request
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -9,9 +8,13 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # using the `org/team_slug` or `/team_slug` syntax to add git team as reviewers
+          addReviewers: true
+          addAssignees: true
+          numberOfReviewers: 1
+          numberOfAssignees: 1
           reviewers: |
-            reviewer1
-            reviewer2
-            reviewer3
-          assignees: author
-          # skipKeywords: wip, draft
+            /authors
+          assignees: |
+            /authors
+          skipKeywords: wip
+          excludeLabels: dependencies, wip
