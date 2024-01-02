@@ -1,20 +1,15 @@
 name: Auto Assign
 on: pull_request
 jobs:
-  run:
+  add-reviews:
     runs-on: ubuntu-latest
     steps:
-      - uses: wow-actions/auto-assign@v3
+      - uses: kentaro-m/auto-assign-action@v1.2.5
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # using the `org/team_slug` or `/team_slug` syntax to add git team as reviewers
           addReviewers: true
-          addAssignees: true
-          numberOfReviewers: 1
-          numberOfAssignees: 1
-          reviewers: |
-            authors
-          assignees: |
-            authors
-          # skipKeywords: wip
-          # excludeLabels: dependencies, wip
+          addAssignees: author
+          reviewers:
+            ChauHuy170197
+            reviewerB
+            reviewerC
+          numberOfReviewers: 0
