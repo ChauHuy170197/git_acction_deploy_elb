@@ -1,0 +1,15 @@
+name: Auto Assign
+on: pull_request
+jobs:
+  add-reviews:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kentaro-m/auto-assign-action@v1.2.5
+        with:
+          addReviewers: true
+          addAssignees: author
+          reviewers:
+            ChauHuy170197
+            reviewerB
+            reviewerC
+          numberOfReviewers: 0
