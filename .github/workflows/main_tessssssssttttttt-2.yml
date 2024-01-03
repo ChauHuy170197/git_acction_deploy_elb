@@ -23,7 +23,9 @@ jobs:
         id: get_commit
         run: echo "::set-output name=commit::$(git rev-parse HEAD)"
       - name: Create tag
-        run: git tag ${{ inputs.version }} ${{ steps.get_commit.outputs.commit }}
+        run: |
+           git tag ${{ inputs.version }} ${{ steps.get_commit.outputs.commit }}
+           git push --tags
       - name: Release
         uses: softprops/action-gh-release@v1
         env:
